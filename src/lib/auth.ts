@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { AuthOptions } from "next-auth"
+import { AuthOptions, getServerSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { compare } from "bcryptjs"
 import { prisma } from "./prisma"
@@ -26,7 +26,6 @@ export const authOptions: AuthOptions = {
         if (!user) return null
 
         const isValid = await compare(credentials.password, user.password)
-
         if (!isValid) return null
 
         return {
@@ -42,3 +41,5 @@ export const authOptions: AuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 }
+
+export const getAuthSession = () => getServerSession(authOptions)
