@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import LoginPage from "@/app/login/page";
+import CadastroPage from "@/app/cadastro/page";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export default function Home() {
   return (
    <div>
-    <LoginPage />
+    < LoginPage />
    </div>
   );
 }
