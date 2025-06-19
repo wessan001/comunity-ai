@@ -1,3 +1,4 @@
+// src/lib/auth.ts
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { AuthOptions, getServerSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -6,14 +7,12 @@ import { prisma } from "./prisma"
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
   providers: [
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "Email", type: "text" },
         password: { label: "Senha", type: "password" },
       },
       async authorize(credentials) {
@@ -42,4 +41,5 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 }
 
+// helper opcional para usar em server components
 export const getAuthSession = () => getServerSession(authOptions)
