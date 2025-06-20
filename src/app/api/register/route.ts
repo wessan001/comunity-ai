@@ -1,34 +1,41 @@
-// src/app/api/register/route.ts
 import { prisma } from "@/lib/prisma"
 import { hash } from "bcryptjs"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json()
+    const body = await req.json()
+    const { name, email, password } = body
 
     if (!name || !email || !password) {
-      return NextResponse.json({ error: "Dados incompletos" }, { status: 400 })
+      return NextResponse.json(
+        { message: "Campos obrigatórios não preenchidos." },
+        { status: 400 }
+      )
     }
 
-    const existingUser = await prisma.user.findUnique({ where: { email } })
-    if (existingUser) {
-      return NextResponse.json({ error: "Email já cadastrado" }, { status: 400 })
+    const userExists = await prisma.user.findUnique({ where: { email } })
+
+    if (userExists) {
+      return NextResponse.json(
+        { message: "Já existe uma conta com este e-mail." },
+        { status: 409 }
+      )
     }
 
     const hashedPassword = await hash(password, 10)
 
-await prisma.user.create({
-  data: {
-    name,
-    email,
-    password: hashedPassword
-      }
+    await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ message: "Usuário criado com sucesso." }, { status: 201 })
   } catch (error) {
-    console.error("Erro no cadastro:", error)
-    return NextResponse.json({ error: "Erro interno" }, { status: 500 })
+    console.error("Erro ao cadastrar:", error)
+    return NextResponse.json({ message: "Erro interno no servidor." }, { status: 500 })
   }
 }
