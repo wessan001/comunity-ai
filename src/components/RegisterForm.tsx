@@ -34,9 +34,10 @@ export default function RegisterForm() {
       }
 
       router.push("/login")
-    } catch (err) {
-      setError("Erro no servidor. Tente novamente.")
-    }
+} catch (err) {
+  console.error("Erro ao cadastrar:", err)
+  setError("Erro no servidor. Tente novamente.")
+}
   }
 
   return (
